@@ -8,6 +8,7 @@ on:
 
 jobs:
   eslint:
+    name: eslint test
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
