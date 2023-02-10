@@ -8,16 +8,24 @@ on:
 
 jobs:
   eslint:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm ci # or yarn install
+      - run: |
+          if [ -e yarn.lock ]; then
+          yarn install --frozen-lockfile
+          elif [ -e package-lock.json ]; then
+          npm ci
+          else
+          npm i
+          fi
       - uses: sibiraj-s/action-eslint@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # Optional
           eslint-args: '--ignore-path=.gitignore --quiet'
           extensions: 'js,jsx,ts,tsx'
           annotations: true
+          bin-path: 'node_modules/eslint/bin'
